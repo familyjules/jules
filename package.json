@@ -15,7 +15,8 @@
     "lodash": "~2.4.1",
     "method-override": "~1.0.0",
     "morgan": "~1.0.0",
-    "serve-favicon": "~2.0.1"
+    "serve-favicon": "~2.0.1",
+    "watson-developer-cloud": "^0.9.9"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",
