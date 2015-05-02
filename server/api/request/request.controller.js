@@ -27,17 +27,18 @@ exports.index = function(req, res) {
       var totalQuestions = Object.keys(scrapedData).length;
       scrapedData.each(function(){
         var question = this.children[0].data;
-        question_and_answer_healthcare.ask({text: question},
-          function (err, response) {
-            // if(response[0].question.evidencelist[0].value > 0.50){
-              questions.push({"question": question, "answer": response[0].question.evidencelist[0].text});
-            // }
-            if(questions.length === totalQuestions) {
-              console.log(questions.length);
-              return res.json(questions)
-            }
-              
-          });
+        question_and_answer_healthcare.ask({text: question}, function (err, response) {
+
+          //if(response[0].question.evidencelist[0].value > 0.50){
+            questions.push({"question": question, "answer": response[0].question.evidencelist[0].text});
+          //}
+
+          console.log(questions.length, totalQuestions);
+
+          if(questions.length === totalQuestions) {
+            return res.json(questions);
+          }
+        });
       });
     }
   });
