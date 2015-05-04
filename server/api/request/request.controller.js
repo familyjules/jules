@@ -25,32 +25,32 @@ exports.index = function(req, res) {
   var cheerio = require('cheerio');
   var q = require('q');
 
-  // request('https://answers.yahoo.com/dir/index?sid=396545018', function(err, yahooResponse, body){
-  //   if(!err && yahooResponse.statusCode == 200){
-  //     var questions = [];
-  //     var $ = cheerio.load(body);
-  //     var scrapedData = $('a.title', '.Bfc');
-  //     var totalQuestions = scrapedData.length;
+  request('https://answers.yahoo.com/dir/index?sid=396545018', function(err, yahooResponse, body){
+    if(!err && yahooResponse.statusCode == 200){
+      var questions = [];
+      var $ = cheerio.load(body);
+      var scrapedData = $('a.title', '.Bfc');
+      var totalQuestions = scrapedData.length;
 
-  //     console.log('total questions found: ' + totalQuestions);
+      console.log('total questions found: ' + totalQuestions);
 
-  //     scrapedData.each(function(i, e){
-  //       var question = this.children[0].data;
+      scrapedData.each(function(i, e){
+        var question = this.children[0].data;
 
-  //       question_and_answer_healthcare.ask({text: question}, function (err, response) {
+        question_and_answer_healthcare.ask({text: question}, function (err, response) {
 
-  //         if(response[0].question.evidencelist[0].value > 0.75){
-  //           questions.push({"question": question, "answer": response[0].question.evidencelist[0].text, 'confidence': Math.floor(response[0].question.evidencelist[0].value * 100) + '%'});
-  //         } else {
-  //           totalQuestions--;
-  //         }
+          if(response[0].question.evidencelist[0].value > 0.75){
+            questions.push({"question": question, "answer": response[0].question.evidencelist[0].text, 'confidence': Math.floor(response[0].question.evidencelist[0].value * 100) + '%'});
+          } else {
+            totalQuestions--;
+          }
 
-  //         if(questions.length === totalQuestions) return res.json(questions);
+          if(questions.length === totalQuestions) return res.json(questions);
 
-  //       });
+        });
 
-  //     });
-  //   }
-  // });
+      });
+    }
+  });
 
 };

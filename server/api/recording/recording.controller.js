@@ -10,16 +10,7 @@ var speechToText = watson.speech_to_text({
   password: "nyiKXdPOivE0",
   version:"v1"
 });
-    // Create a new saved message object from the Twilio data
-// var msg = new Message({
-//   sid: req.param('CallSid'),
-//   type:'call',
-//   recordingUrl: req.param('RecordingUrl'),
-//   recordingDuration: Number(req.param('RecordingDuration')),
-//   fromCity:req.param('FromCity'),
-//   fromState:req.param('FromState'),
-//   fromCountry:request.param('FromCountry')
-// });
+ 
 
 var transcode_to_16k = function (input, output, cb) {
   var job = sox.transcode(input, output, {
@@ -66,16 +57,18 @@ var save_to_file = function (url, path, cb) {
     })
 }
 
-exports.index = function (url, cb) {
+// req.param.recordingUrl('RecordingUrl')
+
+exports.index = function (req, res) {
   tmp.file({postfix: '.wav'}, function _tempFileCreated (err, input, fd) {
     if (err) throw err
 
     tmp.file({postfix: '.wav'}, function _tempFileCreated (err, output, fd) {
       if (err) throw err
 
-      save_to_file(url, input, function () {
+      save_to_file(req.params.RecordingUrl, input, function () {
         transcode_to_16k(input, output, function () {
-          convert_to_text(output, cb)
+          convert_to_text(output, res)
         })
       })
     })
