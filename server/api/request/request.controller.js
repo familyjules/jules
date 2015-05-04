@@ -1,6 +1,13 @@
 'use strict';
-
 var _ = require('lodash');
+// var TwitterBot = require("node-twitterbot").TwitterBot
+// var Twit = require('twit')
+var accountSid = 'AC0d4f667900e2a6fea95046313f539958'; 
+var authToken = '8dd9c7e404b9b17113030ae34db27443'; 
+//require the Twilio module and create a REST client 
+var client = require('twilio')(accountSid, authToken); 
+ 
+
 
 // Get list of requests
 exports.index = function(req, res) {
@@ -23,4 +30,5 @@ exports.index = function(req, res) {
       else
         res.json({'confidence': response[0].question.evidencelist[0].value, 'answer': response[0].question.evidencelist[0].text})
   });
+  
 };
