@@ -1,8 +1,21 @@
  var Twit = require('twit')
   , config1 = require('./botconfig')
-  , watson = require('watson-developer-cloud');
+  , watson = require('watson-developer-cloud')
+  , mongoConfig = require('./config/environment')
+  , mongo = require('mongodb').MongoClient
+  , DB;
 ;
 
+
+mongo.connect(mongoConfig.mongo.uri, function (err, db){
+  if(err){
+    console.log(err)
+  }
+  else{
+    DB = db;
+    console.log('connected to mongo')
+  }
+})
 
 var bot = new Twit(config1);
 bot.nick = 'julesgotanswers'
@@ -42,6 +55,7 @@ exports.main = function() {
               answer = answer.split('.')[0]
             }
             if (tweet.user.screen_name !== 'julesgotanswers'){
+              DB.collection('requests').insert({question : tweet.text, answer: answer, channel: 'twitter'})
               bot.post('statuses/update', {
                   status: '.@' + tweet.user.screen_name + " " + answer,
                   in_reply_to_status_id: tweet.id_str
