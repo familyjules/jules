@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
+    "bluebird": "^2.9.25",
     "body-parser": "~1.5.0",
+    "cheerio": "^0.19.0",
     "composable-middleware": "^0.3.0",
     "compression": "~1.0.1",
     "connect-mongo": "^0.4.1",
@@ -14,11 +16,15 @@
     "express-session": "~1.0.2",
     "lodash": "~2.4.1",
     "method-override": "~1.0.0",
+    "mongodb": "^2.0.28",
     "morgan": "~1.0.0",
     "node-twitterbot": "^0.2.2",
     "serve-favicon": "~2.0.1",
+<<<<<<< HEAD
     "tmp": "0.0.25",
     "twilio": "^2.1.0",
+=======
+>>>>>>> 4dccd40016f28b0c5529644d58ea07959b17fd96
     "twit": "^1.1.20",
     "watson-developer-cloud": "^0.9.9"
   },
