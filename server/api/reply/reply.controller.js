@@ -1,7 +1,9 @@
 'use strict';
+
 var mongoConfig = require('../../config/environment')
 var mongo = require('mongodb').MongoClient
 var DB;
+
 var _ = require('lodash');
 var accountSid = 'AC0d4f667900e2a6fea95046313f539958'; 
 var authToken = '8dd9c7e404b9b17113030ae34db27443'; 
