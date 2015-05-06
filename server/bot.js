@@ -13,7 +13,7 @@ mongo.connect(mongoConfig.mongo.uri, function (err, db){
   }
   else{
     DB = db;
-    console.log('connected to mongo')
+    console.log('connected to mongo, oh and sam sucks')
   }
 })
 
