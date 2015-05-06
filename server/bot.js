@@ -24,6 +24,7 @@ bot.nick = 'julesgotanswers'
 var responses = ['I must admit, I really prefer questions that start with "what"','You can ask a better question than that!', "Who is Jules? I'll take potent potables for 500, Alex",'Please rephrase the nature of the medical emergency',"I'm sorry. My responses are limited. You must ask the right questions."]
 
 console.log('Jules bot sends his regards.');
+
 var question_and_answer_healthcare = watson.question_and_answer({
   username: '8a2c0b68-8e22-4ed4-931f-7f10c7e3b339',
   password: 'fyMSE9bnwewL',

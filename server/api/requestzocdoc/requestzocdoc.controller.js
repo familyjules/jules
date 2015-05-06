@@ -1,17 +1,10 @@
 'use strict';
+
 var _ = require('lodash');
-// var TwitterBot = require("node-twitterbot").TwitterBot
-// var Twit = require('twit')
-var accountSid = 'AC0d4f667900e2a6fea95046313f539958'; 
-var authToken = '8dd9c7e404b9b17113030ae34db27443'; 
-//require the Twilio module and create a REST client 
-var client = require('twilio')(accountSid, authToken); 
- 
 
-
-// Get list of requests
+// Get list of requestzocdocs
 exports.index = function(req, res) {
-
+  
   var watson = require('watson-developer-cloud');
 
   var question_and_answer_healthcare = watson.question_and_answer({
@@ -25,20 +18,19 @@ exports.index = function(req, res) {
   var cheerio = require('cheerio');
   var q = require('q');
 
-  request('https://answers.yahoo.com/dir/index?sid=396545018', function(err, yahooResponse, body){
-    if(!err && yahooResponse.statusCode == 200){
+  request('https://www.zocdoc.com/answers', function(err, zocdocResponse, body){
+    if(!err && zocdocResponse.statusCode == 200){
       var questions = [];
       var $ = cheerio.load(body);
-      var scrapedData = $('a.title', '.Bfc');
+      var scrapedData = $('a.answer-name', '.AnswersLayout-left');
       var totalQuestions = scrapedData.length;
 
       console.log('total questions found: ' + totalQuestions);
 
       scrapedData.each(function(i, e){
-        var question = this.children[0].data;
-
+        var question = this.attribs.title;
         question_and_answer_healthcare.ask({text: question}, function (err, response) {
-
+          
           if(response[0].question.evidencelist[0].value > 0.75){
             questions.push({"question": question, "answer": response[0].question.evidencelist[0].text, 'confidence': Math.floor(response[0].question.evidencelist[0].value * 100) + '%'});
           } else {
@@ -52,5 +44,4 @@ exports.index = function(req, res) {
       });
     }
   });
-
 };
