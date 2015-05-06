@@ -19,6 +19,7 @@
     "mongodb": "^2.0.28",
     "morgan": "~1.0.0",
     "node-twitterbot": "^0.2.2",
+    "request": "^2.55.0",
     "serve-favicon": "~2.0.1",
     "twit": "^1.1.20",
     "watson-developer-cloud": "^0.9.9"
