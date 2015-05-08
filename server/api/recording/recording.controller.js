@@ -33,7 +33,6 @@ var transcode_to_16k = function (input, output, cb) {
 }
 
 var convert_to_text = function(){
-  var audio = msg.recordingUrl
   var params = {
     audio: fs.createReadStream(audio),
     content_type: 'audio/l16; rate=44100'
@@ -57,7 +56,6 @@ var save_to_file = function (url, path, cb) {
     })
 }
 
-// req.param.recordingUrl('RecordingUrl')
 
 exports.index = function (req, res) {
   tmp.file({postfix: '.wav'}, function _tempFileCreated (err, input, fd) {
@@ -68,7 +66,9 @@ exports.index = function (req, res) {
 
       save_to_file(req.params.RecordingUrl, input, function () {
         transcode_to_16k(input, output, function () {
-          convert_to_text(output, res)
+          convert_to_text(output, function(){
+            
+          })
         })
       })
     })
