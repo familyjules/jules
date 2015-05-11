@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title></title>
+    <title>Jules</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -18,8 +18,9 @@
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
-    <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
+      <link rel="stylesheet" href="app/about/about.css">
+      <link rel="stylesheet" href="app/animate.min.css">
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/dataVisualizer/dataVisualizer.css">
       <link rel="stylesheet" href="app/main/main.css">
@@ -37,13 +38,13 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      /*(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
       ga('create', 'UA-XXXXX-X');
-      ga('send', 'pageview');
+      ga('send', 'pageview');*/
     </script>
 
     <!--[if lt IE 9]>
@@ -66,6 +67,8 @@
         <!-- build:js({.tmp,client}) app/app.js -->
         <script src="app/app.js"></script>
           <!-- injector:js -->
+          <script src="app/about/about.controller.js"></script>
+          <script src="app/about/about.js"></script>
           <script src="app/dataVisualizer/dataVisualizer.controller.js"></script>
           <script src="app/dataVisualizer/dataVisualizer.js"></script>
           <script src="app/dataVisualizer/uStates.js"></script>
