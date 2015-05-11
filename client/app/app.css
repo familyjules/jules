@@ -46,7 +46,7 @@ body {
 
 body {
     font-family: Merriweather,'Helvetica Neue',Arial,sans-serif;
-    background-image: url(../assets/images/header-4.jpg);
+    background-image: url('../assets/images/header-4.jpg');
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -185,7 +185,7 @@ aside {
         padding-left:75px;
     }
     .navbar-brand {
-        background-image: url(../assets/images/logo-2.png);
+        background-image: url('../assets/images/logo-2.png');
     }
     .navbar-default .navbar-header .navbar-brand:hover,
     .navbar-default .navbar-header .navbar-brand:focus {
@@ -280,7 +280,7 @@ aside {
         margin-top: 15px;
     }
     .navbar-brand {
-        background-image: url(../assets/images/logo.png);
+        background-image: url('../assets/images/logo.png');
         margin-top: 15px;
         margin-left: 15px;
     }
