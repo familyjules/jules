@@ -25,7 +25,7 @@ exports.index = function(req, res){
   var zipcode = req.body.FromZip
   var thisPhone = req.body.From
 
-  var twilioClient = twilio(config.apiKeys.twilio.sid, config.apiKeys.twilio.auth)
+  var twilioClient = twilio(config.apiKeys.twilio.sid, config.apiKeys.twilio.auth);
 
   var info = DB.collection('requests').find({
     phoneNumber: thisPhone
@@ -88,7 +88,7 @@ exports.index = function(req, res){
             answerId: response[0].question.answers[0].id,
             answerText: response[0].question.answers[0].text,
             confidence: response[0].question.answers[0].confidence,
-          })
+          });
 
           twilioClient.messages.create({
             to: thisPhone,
@@ -102,9 +102,10 @@ exports.index = function(req, res){
             }, function(err, message){
               res.status(200);
               res.end();
-            })
-          })
-        } else if(response[0].question.evidencelist[0].value < config.confidenceLevel){
+            });
+          });
+
+        } else {
           twilioClient.messages.create({
             to: thisPhone,
             from: config.apiKeys.twilio.fromNumber,
