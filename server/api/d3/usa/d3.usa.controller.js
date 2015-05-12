@@ -2,15 +2,22 @@
 
 var _ = require('lodash'),
         mongoConfig = require('../../../config/environment'), 
-        mongo = require('mongodb').MongoClient;
+        pmongo = require('promised-mongo'),
+        Promise = require("bluebird");
       
+// Get list of citydatas
 exports.index = function(req, res) {
-  mongo.connect(mongoConfig.mongo.uri, function (err, db){
-    console.log(db)
-    db.collection('requests').find().toArray(function(err, data){
-      res.json(data);
+  var db = pmongo(mongoConfig.mongo.uri);
+  var retObj = {};
+  db.collection('requests').distinct("state").then(function(states){
+
+    var statePromises = states.map(function (state) {
+      return db.collection('requests').count({"state": state})
     });
+
+    Promise.all(statePromises).then(function (results) {
+      res.json(results);
+    });
+
   });
-
-
 };

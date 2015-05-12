@@ -14,7 +14,8 @@ var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
-var TwitterBot = require("node-twitterbot").TwitterBot
+var TwitterBot = require("node-twitterbot").TwitterBot;
+var xmlparser = require('express-xml-bodyparser');
 
 module.exports = function(app) {
   var env = app.get('env');
@@ -28,6 +29,7 @@ module.exports = function(app) {
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(morgan('dev'));
+  app.use(xmlparser());
 
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));

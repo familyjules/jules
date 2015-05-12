@@ -12,7 +12,7 @@ module.exports = function(app) {
   app.use('/api/d3/usa', require('./api/d3/usa'));
   app.use('/api/voice', require('./api/voice'));
   app.use('/api/sms', require('./api/sms'));
-  
+
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*').get(errors[404]);
 
