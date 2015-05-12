@@ -72,5 +72,5 @@
 			.style("fill",function(d){ return data[d.id].color; })
 			.on("mouseover", mouseOver).on("mouseout", mouseOut);
 	}
-	this.uStates = uStates;
+  window.uStates = uStates;
 })();

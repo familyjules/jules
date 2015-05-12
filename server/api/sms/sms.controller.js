@@ -1,23 +1,20 @@
 'use strict';
 
-var mongoConfig = require('../../config/environment')
-var mongo = require('mongodb').MongoClient
-var DB;
+var config = require('../../config/environment');
+var mongo = require('mongodb').MongoClient;
 var request = require('request');
-var _ = require('lodash');
-var accountSid = 'AC0d4f667900e2a6fea95046313f539958'; 
-var authToken = '8dd9c7e404b9b17113030ae34db27443'; 
-var client = require('twilio')(accountSid, authToken); 
+var twilio = require('twilio'); 
 var watson = require('watson-developer-cloud');
+var DB;
 
 var question_and_answer_healthcare = watson.question_and_answer({
-  username: '8a2c0b68-8e22-4ed4-931f-7f10c7e3b339',
-  password: 'fyMSE9bnwewL',
+  username: config.apiKeys.watson.question_and_answer.username,
+  password: config.apiKeys.watson.question_and_answer.password,
   version: 'v1',
   dataset: 'healthcare'
 });
 
-mongo.connect(mongoConfig.mongo.uri, function (err, db){
+mongo.connect(config.mongo.uri, function (err, db){
   DB = db;
 });
 
@@ -28,7 +25,21 @@ exports.index = function(req, res){
   var zipcode = req.body.FromZip
   var thisPhone = req.body.From
 
-  var info = DB.collection('requests').find({phoneNumber: '+15105990762'},{_id:0, channel:0, phoneNumber:0, city:0, state:0, zipcode:0}).limit(1).sort({$natural:-1});
+  var twilioClient = twilio(config.apiKeys.twilio.sid, config.apiKeys.twilio.auth)
+
+  var info = DB.collection('requests').find({
+    phoneNumber: thisPhone
+  },
+  {
+    _id:0, 
+    channel:0,
+    phoneNumber:0,
+    city:0,
+    state:0,
+    zipcode:0
+  }).limit(1).sort({
+    $natural: -1
+  });
   
   info.on('data', function(datum){
     if(question.length === 1 && (question - 0) == question){
@@ -41,42 +52,30 @@ exports.index = function(req, res){
           json: true,
           body: datum,
           auth: {
-            user: "8a2c0b68-8e22-4ed4-931f-7f10c7e3b339",
-            pass: "fyMSE9bnwewL",
+            user: config.apiKeys.watson.question_and_answer.username,
+            pass: config.apiKeys.watson.question_and_answer.password,
             sendImmediately: true
           }
         };
 
         request(options, function(err, response) {
-
-          if (response.statusCode === 200 || response.statusCode === 201) {
-            client.messages.create({
-            to: "+15105990762",
-            from: "+14153196727",
+          if(response.statusCode === 200 || response.statusCode === 201) {
+            twilioClient.messages.create({
+            to: thisPhone,
+            from: config.apiKeys.twilio.fromNumber,
             body: response.statusCode + ' thanks for the feedback!'
             }, function(err, message){
               res.status(200);
               res.end();
             })
-          } else {
-            client.messages.create({
-              to: "+15105990762",
-              from: "+14153196727",
-              body: response.statusCode + ' thanks for the feedback!'
-            }, function(err, message){
-              res.status(200);
-              res.end();
-            })
           }
-          res.end();
-
         });
         
     } else { 
 
       question_and_answer_healthcare.ask({text: question}, function (err, response) {
         var answer = response[0].question.evidencelist[0].text
-        if(response[0].question.evidencelist[0].value > .3){
+        if(response[0].question.evidencelist[0].value > config.confidenceLevel){
 
           DB.collection('requests').insert({
             channel: 'sms', 
@@ -91,25 +90,25 @@ exports.index = function(req, res){
             confidence: response[0].question.answers[0].confidence,
           })
 
-          client.messages.create({
+          twilioClient.messages.create({
             to: thisPhone,
-            from: "+14153196727",
+            from: config.apiKeys.twilio.fromNumber,
             body: answer
           }, function(err, message){
-            client.messages.create({
-              to: "",
-              from: "",
+            twilioClient.messages.create({
+              to: thisPhone,
+              from: config.apiKeys.twilio.fromNumber,
               body: 'How would you rate this answer? 0 = bad, 1 = neutral, 2 = good.'
             }, function(err, message){
               res.status(200);
               res.end();
             })
           })
-        } else if(response[0].question.evidencelist[0].value < .3){
-          client.messages.create({
+        } else if(response[0].question.evidencelist[0].value < config.confidenceLevel){
+          twilioClient.messages.create({
             to: thisPhone,
-            from: "+14153196727",
-            body: 'I was unable to answer your question. Please rephrase it so I can try again!'
+            from: config.apiKeys.twilio.fromNumber,
+            body: config.lowConfidenceMessage
           }, function(err, message){
             res.status(200);
             res.end();

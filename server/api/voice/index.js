@@ -1,10 +1,74 @@
-'use strict';
-
 var express = require('express');
-var controller = require('./voice.controller');
+var twilio = require('twilio');
+var speech = require('../voice/speech.js');
+var config = require('../../config/environment');
+var watson = require('watson-developer-cloud');
 
 var router = express.Router();
 
-router.post('/', controller.index);
+var twilioClient = twilio(config.apiKeys.twilio.sid, config.apiKeys.twilio.auth);
 
-module.exports = router;
+var question_and_answer_healthcare = watson.question_and_answer({
+  username: config.apiKeys.watson.question_and_answer.username,
+  password: config.apiKeys.watson.question_and_answer.password,
+  version: 'v1',
+  dataset: 'healthcare'
+});
+
+// Used to store a map from call_ssid -> answers
+var answers = {}
+
+// Callback soup stitching together API services used to
+// convert between an audio recording -> text -> watson answer.
+var enqueue_question = function (recording) {
+  var audio_location = recording.RecordingUrl;
+  var call_ssid = recording.CallSid;
+
+  speech.text(audio_location, function (question) {
+    question_and_answer_healthcare.ask({text: question}, function (err, response) {
+      answers[call_ssid] = response[0].question.evidencelist[0].text
+      twilioClient.calls(call_ssid).update({
+        url: 'http://jules.mybluemix.net/calls/answer'
+      });
+    });
+  });
+};
+
+// Twilio callback handling. Set up routes for different parts of the phone call.
+router.post('/', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+  var twiml = new twilioClient.TwimlResponse()
+  twiml.say('Welcome to Jules, how can I help you? Press any key after you have finished speaking!')
+    .record({timeout: 60, action: '/calls/recording'})
+
+  res.send(twiml)
+})
+
+router.post('/holding', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+  var twiml = new twilioClient.TwimlResponse()
+  twiml.pause({length: 5})
+    .say("I'm still thinking")
+    .redirect('/calls/holding')
+
+  res.send(twiml)
+})
+
+router.post('/recording', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+  var twiml = new twilioClient.TwimlResponse()
+
+  enqueue_question(req.body)
+
+  twiml.say('One moment please, I\'m thinking').redirect('/calls/holding')
+  res.send(twiml)
+})
+
+router.post('/answer', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+  var twiml = new twilioClient.TwimlResponse()
+
+  twiml.say(answers[req.body.CallSid])
+    .say('Do you have another question?')
+    .record({timeout: 60, action: '/calls/recording'})
+
+  res.send(twiml)
+})
+
+module.exports = router

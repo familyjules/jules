@@ -3,8 +3,5 @@
 // Development specific configuration
 // ==================================
 module.exports = {
-  // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://boss:boss@ds031862.mongolab.com:31862/jules'
-  }
+  //We don't have any development-specific configurations, yet.
 };

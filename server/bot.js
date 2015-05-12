@@ -1,113 +1,90 @@
- var Twit = require('twit')
-  , config1 = require('./botconfig')
-  , watson = require('watson-developer-cloud')
-  , mongoConfig = require('./config/environment')
-  , mongo = require('mongodb').MongoClient
-  , DB
-  , request = require('request')
-;
+var Twit = require('twit');
+var watson = require('watson-developer-cloud');
+var config = require('./config/environment');
+var mongo = require('mongodb').MongoClient;
+var request = require('request');
+var DB;
 
+mongo.connect(config.mongo.uri, function (err, db){
+  DB = db;
+});
 
-mongo.connect(mongoConfig.mongo.uri, function (err, db){
-  if(err){
-    console.log(err)
-  }
-  else{
-    DB = db;
-    mongo
-    console.log('connected to mongo')
-  }
-})
-
-var bot = new Twit(config1);
+var bot = new Twit(config.apiKeys.twitter);
 bot.nick = 'julesgotanswers'
-var responses = ['I must admit, I really prefer questions that start with "what"','You can ask a better question than that!', "Who is Jules? I'll take potent potables for 500, Alex",'Please rephrase the nature of the medical emergency',"I'm sorry. My responses are limited. You must ask the right questions."]
 
-console.log('Jules bot sends his regards.');
+console.log('The Jules bot is operating in the shadows.');
 
 var question_and_answer_healthcare = watson.question_and_answer({
-  username: '8a2c0b68-8e22-4ed4-931f-7f10c7e3b339',
-  password: 'fyMSE9bnwewL',
+  username: config.apiKeys.watson.question_and_answer.username,
+  password: config.apiKeys.watson.question_and_answer.password,
   version: 'v1',
   dataset: 'healthcare' 
 });
 
 exports.main = function() {
   var me = bot.nick;
+
   var stream = bot.stream('user', {
     track: me
-  }, function(err){
-    if(err){
-      console.log(err)
-    }
   });
+
   stream.on('tweet', function(tweet) {
-    console.log('stream event for a tweet')
-    question_and_answer_healthcare.ask({
-        text: tweet.text }, function (err, response) {
-          if (err){
-            console.log('error:', err);
+    question_and_answer_healthcare.ask({text: tweet.text}, function (err, response) {
+      var answer = response[0].question.evidencelist[0].text;
+
+      if(response[0].question.evidencelist[0].value < config.confidenceLevel){
+        answer = config.lowConfidenceMessage;
+      }
+
+      if(answer.length > 120){
+        answer = answer.split('.')[0]
+      }
+
+      if (tweet.user.screen_name !== 'julesgotanswers' && tweet.text.indexOf('#rating') === -1){
+        DB.collection('requests').insert({
+          username: tweet.user.screen_name,
+          question: tweet.text,
+          answer: answer,
+          channel: 'twitter',
+          info: {
+            questionId: response[0].question.id,
+            questionText: response[0].question.questionText,
+            answerId: response[0].question.answers[0].id,
+            answerText: response[0].question.answers[0].text,
+            confidence: response[0].question.answers[0].confidence, 
+            feedback: 1
           }
-          else{
-            var answer = response[0].question.evidencelist[0].text;
-            if(response[0].question.evidencelist[0].value < .4){
-              answer = responses[Math.floor(Math.random() * 4)]
-            }
-            if(answer.length > 120){
-              answer = answer.split('.')[0]
-            }
-            if (tweet.user.screen_name !== 'julesgotanswers' && tweet.text.indexOf('#rating') === -1){
-              DB.collection('requests').insert({username: tweet.user.screen_name, question : tweet.text, answer: answer, channel: 'twitter', info :{
-                             questionId: response[0].question.id,
-                             questionText: response[0].question.questionText,
-                             answerId: response[0].question.answers[0].id,
-                             answerText: response[0].question.answers[0].text,
-                             confidence: response[0].question.answers[0].confidence, 
-                             feedback: 1
-                            }})
-              bot.post('statuses/update', {
-                  status: '.@' + tweet.user.screen_name + " " + answer,
-                  in_reply_to_status_id: tweet.id_str
-                }, function(err) {
-                  if(err){
-                    console.log(err)
-                  }
-                  return console.log("tweet posted");
-                });
-            }
-            if(tweet.user.screen_name !== 'julesgotanswers' && tweet.text.indexOf('#rating') > -1){
-                  //db lookup on tweet.user.screename and get back questionId, quest
-                  var requestsColec = DB.collection('requests').find({"username" : tweet.user.screen_name});
-                  requestsColec.on('data', function(datum){
-                    var info = datum.info;
-                    var options = {
-                      url: 'https://gateway.watsonplatform.net/question-and-answer-beta/api/v1/feedback',
-                      method: 'PUT',
-                      json: true,
-                      body: info,
-                      auth: {
-                        user: '8a2c0b68-8e22-4ed4-931f-7f10c7e3b339',
-                        pass: 'fyMSE9bnwewL',
-                        sendImmediately: true
-                      }
-                    };
+        });
 
-                    request(options, function(err, response) {
-                      if (response.statusCode === 200 || response.statusCode == 201) {
-                        console.log('feedback accepted');
-                      } else {
-                        console.log('feedback error, missing parameter?');
-                      }
-                    });
-                    
-                  })
+        bot.post('statuses/update', {
+          status: '.@' + tweet.user.screen_name + " " + answer,
+          in_reply_to_status_id: tweet.id_str
+        });
+      }
 
+      if(tweet.user.screen_name !== 'julesgotanswers' && tweet.text.indexOf('#rating') > -1){
+        var requestsColec = DB.collection('requests').find({"username" : tweet.user.screen_name});
+        requestsColec.on('data', function(datum){
+          var info = datum.info;
+          var options = {
+            url: 'https://gateway.watsonplatform.net/question-and-answer-beta/api/v1/feedback',
+            method: 'PUT',
+            json: true,
+            body: info,
+            auth: {
+              user: '8a2c0b68-8e22-4ed4-931f-7f10c7e3b339',
+              pass: 'fyMSE9bnwewL',
+              sendImmediately: true
             }
-          }
-        }
-      );
-
-
-  })
+          };
+          request(options, function(err, response) {
+            if (response.statusCode === 200 || response.statusCode == 201) {
+              //FEEDBACK ACCEPTED
+            }
+          });
+        });
+      }
+    });
+  });
 }
   

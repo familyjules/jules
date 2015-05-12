@@ -1,13 +1,13 @@
 'use strict';
 
 var _ = require('lodash'),
-        mongoConfig = require('../../../config/environment'), 
+        config = require('../../.././config/environment'), 
         pmongo = require('promised-mongo'),
         Promise = require("bluebird");
       
 // Get list of citydatas
 exports.index = function(req, res) {
-  var db = pmongo(mongoConfig.mongo.uri);
+  var db = pmongo(config.mongo.uri);
   var retObj = {};
   db.collection('requests').distinct("state").then(function(states){
 

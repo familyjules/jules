@@ -21,19 +21,22 @@ var all = {
   // Server port
   port: process.env.PORT || 9000,
 
-  // MongoDB connection options
+  apiKeys: require('./api.keys.js') || {},
+
   mongo: {
-    options: {
-      db: {
-        safe: true
-      }
-    }
+    uri: 'mongodb://boss:boss@ds031862.mongolab.com:31862/jules'
   },
 
+  confidenceLevel: .35,
+
+  lowConfidenceMessage: 'I was unable to answer your question. Please rephrase it so I can try again!'
 };
 
 // Export the config object based on the NODE_ENV
 // ==============================================
-module.exports = _.merge(
-  all,
-  require('./' + process.env.NODE_ENV + '.js') || {});
+
+if(process.env.NODE_ENV == 'production'){
+  module.exports = _.merge(all, require('./production.js'));
+} else if(process.env.NODE_ENV == 'development') {
+  module.exports = _.merge(all, require('./development.js'));
+}
