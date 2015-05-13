@@ -4,6 +4,7 @@ var speech = require('../voice/speech.js');
 var config = require('../../config/environment');
 var watson = require('watson-developer-cloud');
 var log = require('loglevel');
+var fs = require('fs');
 
 var router = express.Router();
 
@@ -34,23 +35,25 @@ var enqueue_question = function (recording) {
       log.info(call_ssid + ' ANSWER: ' + answers[call_ssid]);
 
       twilioClient.calls(call_ssid).update({
-        url: 'http://jules.mybluemix.net/voice/answer'
+        url: 'http://jules.mybluemix.net/api/voice/answer'
       });
     });
   });
 };
 
 // Twilio callback handling. Set up routes for different parts of the phone call.
-router.post('/', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+router.post('/', function (req, res) {
+  fs.writeFileSync('message.txt', JSON.stringify(req.body));
+
   log.info(req.body.CallSid + '-> voice/')
   log.debug(req.body)
 
   var twiml = new twilioClient.TwimlResponse()
   twiml.say('Welcome to Jules, how can I help you? Press any key after you have finished speaking!')
-    .record({timeout: 60, action: '/voice/recording'})
+    .record({timeout: 60, action: '/api/voice/recording'})
 
   res.send(twiml)
-})
+});
 
 router.post('/holding', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
   log.info(req.body.CallSid + '-> voice/holding')
@@ -59,10 +62,10 @@ router.post('/holding', twilio.webhook(config.apiKeys.twilio.auth), function (re
   var twiml = new twilioClient.TwimlResponse()
   twiml.pause({length: 5})
     .say("I'm still thinking")
-    .redirect('/voice/holding')
+    .redirect('/api/voice/holding')
 
   res.send(twiml)
-})
+});
 
 router.post('/recording', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
   log.info(req.body.CallSid + '-> voice/recording')
@@ -74,7 +77,7 @@ router.post('/recording', twilio.webhook(config.apiKeys.twilio.auth), function (
 
   twiml.say('One moment please, I\'m thinking').redirect('/voice/holding')
   res.send(twiml)
-})
+});
 
 router.post('/answer', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
   log.info(req.body.CallSid + '-> voice/answer')
@@ -84,9 +87,9 @@ router.post('/answer', twilio.webhook(config.apiKeys.twilio.auth), function (req
 
   twiml.say(answers[req.body.CallSid])
     .say('Do you have another question?')
-    .record({timeout: 60, action: '/voice/recording'})
+    .record({timeout: 60, action: '/api/voice/recording'})
 
   res.send(twiml)
-})
+});
 
 module.exports = router
