@@ -27,22 +27,23 @@ exports.index = function(req, res){
 
   var twilioClient = twilio(config.apiKeys.twilio.sid, config.apiKeys.twilio.auth);
 
-  var info = DB.collection('requests').find({
-    phoneNumber: thisPhone
-  },
-  {
-    _id:0, 
-    channel:0,
-    phoneNumber:0,
-    city:0,
-    state:0,
-    zipcode:0
-  }).limit(1).sort({
-    $natural: -1
-  });
-  
-  info.on('data', function(datum){
     if(question.length === 1 && (question - 0) == question){
+
+      var info = DB.collection('requests').find({
+        phoneNumber: thisPhone
+      },
+      {
+        _id:0, 
+        channel:0,
+        phoneNumber:0,
+        city:0,
+        state:0,
+        zipcode:0
+      }).limit(1).sort({
+        $natural: -1
+      });
+      
+      info.on('data', function(datum){
 
         datum.feedback = question - 1
 
@@ -70,6 +71,7 @@ exports.index = function(req, res){
             })
           }
         });
+      });
         
     } else { 
 
@@ -117,5 +119,4 @@ exports.index = function(req, res){
         }
       });
     }
-  });
 };

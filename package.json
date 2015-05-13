@@ -16,6 +16,7 @@
     "express-session": "~1.0.2",
     "express-xml-bodyparser": "0.0.7",
     "lodash": "~2.4.1",
+    "loglevel": "^1.2.0",
     "method-override": "~1.0.0",
     "mongodb": "^2.0.28",
     "morgan": "~1.0.0",

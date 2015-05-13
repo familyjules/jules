@@ -16,6 +16,9 @@ var path = require('path');
 var config = require('./environment');
 var TwitterBot = require("node-twitterbot").TwitterBot;
 var xmlparser = require('express-xml-bodyparser');
+var log = require('loglevel');
+
+log.setLevel('info');
 
 module.exports = function(app) {
   var env = app.get('env');
