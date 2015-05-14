@@ -43,10 +43,7 @@ var enqueue_question = function (recording) {
 
 // Twilio callback handling. Set up routes for different parts of the phone call.
 router.post('/', function (req, res) {
-  fs.writeFileSync('message.txt', JSON.stringify(req.body));
-
-  log.info(req.body.CallSid + '-> voice/')
-  log.debug(req.body)
+  fs.writeFileSync('./log.txt', JSON.stringify([config.apiKeys.twilio.sid, config.apiKeys.twilio.auth, req.body]));
 
   var twiml = new twilioClient.TwimlResponse()
   twiml.say('Welcome to Jules, how can I help you? Press any key after you have finished speaking!')
@@ -55,7 +52,7 @@ router.post('/', function (req, res) {
   res.send(twiml)
 });
 
-router.post('/holding', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+router.post('/holding', function (req, res) {
   log.info(req.body.CallSid + '-> voice/holding')
   log.debug(req.body)
 
@@ -67,7 +64,7 @@ router.post('/holding', twilio.webhook(config.apiKeys.twilio.auth), function (re
   res.send(twiml)
 });
 
-router.post('/recording', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+router.post('/recording', function (req, res) {
   log.info(req.body.CallSid + '-> voice/recording')
   log.debug(req.body)
 
@@ -79,7 +76,7 @@ router.post('/recording', twilio.webhook(config.apiKeys.twilio.auth), function (
   res.send(twiml)
 });
 
-router.post('/answer', twilio.webhook(config.apiKeys.twilio.auth), function (req, res) {
+router.post('/answer', function (req, res) {
   log.info(req.body.CallSid + '-> voice/answer')
   log.debug(req.body)
 
