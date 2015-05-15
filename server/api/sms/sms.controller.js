@@ -3,7 +3,7 @@
 var config = require('../../config/environment');
 var mongo = require('mongodb').MongoClient;
 var request = require('request');
-var twilio = require('twilio'); 
+var twilio = require('../twilio/index.js');
 var watson = require('watson-developer-cloud');
 var DB;
 
