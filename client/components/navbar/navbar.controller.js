@@ -12,6 +12,10 @@ angular.module('julesApp')
         'link': '/visualizations'
       },
       {
+        'title': 'FAQ',
+        'link': '/FAQ'
+      },
+      {
         'title': 'About Us',
         'link': '/about'
       }
