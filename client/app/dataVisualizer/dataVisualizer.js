@@ -3,7 +3,7 @@
 angular.module('julesApp')
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/dataVisualizer', {
+      .when('/visualizations', {
         templateUrl: 'app/dataVisualizer/dataVisualizer.html',
         controller: 'DataVisualizerCtrl'
       });

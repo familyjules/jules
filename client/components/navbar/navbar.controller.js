@@ -9,7 +9,7 @@ angular.module('julesApp')
       },
       {
         'title': 'Visualizations',
-        'link': '/dataVisualizer'
+        'link': '/visualizations'
       },
       {
         'title': 'About Us',

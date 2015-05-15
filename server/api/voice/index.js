@@ -42,7 +42,7 @@ var enqueue_question = function (recording) {
 };
 
 // Twilio callback handling. Set up routes for different parts of the phone call.
-router.post('/', function (req, res) {
+router.post('/', twilio.webhook({url:'http://jules.mybluemix.net/api/voice', protocol:'http'}), function (req, res) {
   fs.writeFileSync('./log.txt', JSON.stringify([config.apiKeys.twilio.sid, config.apiKeys.twilio.auth, req.body]));
 
   var twiml = new twilioClient.TwimlResponse()
@@ -52,7 +52,7 @@ router.post('/', function (req, res) {
   res.send(twiml)
 });
 
-router.post('/holding', function (req, res) {
+router.post('/holding', twilio.webhook({url:'http://jules.mybluemix.net/api/voice/holding', protocol:'http'}), function (req, res) {
   log.info(req.body.CallSid + '-> voice/holding')
   log.debug(req.body)
 
@@ -64,7 +64,7 @@ router.post('/holding', function (req, res) {
   res.send(twiml)
 });
 
-router.post('/recording', function (req, res) {
+router.post('/recording', twilio.webhook({url:'http://jules.mybluemix.net/api/voice/recording', protocol:'http'}), function (req, res) {
   log.info(req.body.CallSid + '-> voice/recording')
   log.debug(req.body)
 
@@ -76,7 +76,7 @@ router.post('/recording', function (req, res) {
   res.send(twiml)
 });
 
-router.post('/answer', function (req, res) {
+router.post('/answer', twilio.webhook({url:'http://jules.mybluemix.net/api/voice/answer', protocol:'http'}), function (req, res) {
   log.info(req.body.CallSid + '-> voice/answer')
   log.debug(req.body)
 
@@ -87,6 +87,12 @@ router.post('/answer', function (req, res) {
     .record({timeout: 60, action: '/api/voice/recording'})
 
   res.send(twiml)
+});
+
+router.post('/fallback', twilio.webhook({validate: false}), function(req, res) {
+  var twiml = new twilioClient.TwimlResponse();
+  twiml.message('Sorry, you suck.');
+  res.send(twiml);
 });
 
 module.exports = router

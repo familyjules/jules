@@ -59,8 +59,8 @@
 			d3.select("#tooltip").transition().duration(200).style("opacity", .9);      
 			
 			d3.select("#tooltip").html(toolTip(d.n, data[d.id]))  
-				.style("left", (d3.event.pageX) + "px")     
-				.style("top", (d3.event.pageY - 28) + "px");
+				.style("left", (d3.event.pageX - 150) + "px")     
+				.style("top", (d3.event.pageY - 400) + "px");
 		}
 		
 		function mouseOut(){
