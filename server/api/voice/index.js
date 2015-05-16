@@ -25,16 +25,18 @@ var answers = {}
 var enqueue_question = function (recording) {
   var audio_location = recording.RecordingUrl;
   var call_ssid = recording.CallSid;
+  fs.writeFileSync('./enqueue_question_one_log.txt', JSON.stringify([audio_location, call_ssid]));
 
   speech.text(audio_location, function (question) {
     log.info(call_ssid + ' QUESTION: ' + question);
+    fs.writeFileSync('./enqueue_question_two_log.txt', JSON.stringify([question]));
 
     question_and_answer_healthcare.ask({text: question}, function (err, response) {
       answers[call_ssid] = response[0].question.evidencelist[0].text
 
       log.info(call_ssid + ' ANSWER: ' + answers[call_ssid]);
 
-      fs.writeFileSync('./enqueue_question_log.txt', JSON.stringify([answers[call_ssid], question]));
+      fs.writeFileSync('./enqueue_question_three_log.txt', JSON.stringify([answers[call_ssid], question]));
 
       twilioClient.calls(call_ssid).update({
         url: 'http://jules.mybluemix.net/api/voice/answer'

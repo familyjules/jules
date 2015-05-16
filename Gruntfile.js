@@ -347,6 +347,7 @@ module.exports = function (grunt) {
           expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
+            'manifest.yml',
             'package.json',
             'server/**/*'
           ]
@@ -489,7 +490,7 @@ module.exports = function (grunt) {
       push: {
         command: function() {
           grunt.log.writeln('Pushing ' + pkg.name + ' to bluemix');
-          return 'cd dist ;cf push '+ pkg.name + ' --no-manifest --no-start -c "NODE_ENV=production node server/app.js"' ;
+          return 'cd dist ;cf push '+ pkg.name + ' --no-start -c "NODE_ENV=production node server/app.js"' ;
         }
       },
       start: {

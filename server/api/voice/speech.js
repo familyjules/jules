@@ -4,6 +4,7 @@ var fs = require('fs');
 var sox = require('sox');
 var tmp = require('tmp');
 var config = require('../../config/environment');
+var log = require('loglevel')
 
 var speech_to_text = watson.speech_to_text({
   username: config.apiKeys.watson.speech_to_text.username,
@@ -17,15 +18,20 @@ var transcode_to_16k = function (input, output, cb) {
     format: 'wav',
     channelCount: 1
   })
-
-  job.on('end', function () {
-    cb()
+  job.on('error', function (err) {
+    log.error(err)
+  })
+  job.on('progress', function (amountDone, amountTotal) {
+    log.debug('progress', amountDone, amountTotal)
   })
 
+  job.on('end', function () {
+    log.debug('Transcoding finished.')
+    cb()
+  })
   job.start()
 
 }
-
 var convert_speech_to_text = function (audio, cb) {
   var params = {
     audio: fs.createReadStream(audio),
