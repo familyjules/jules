@@ -8,16 +8,17 @@ var _ = require('lodash'),
 // Get list of citydatas
 exports.index = function(req, res) {
   var db = pmongo(config.mongo.uri);
-  var retObj = {};
-  db.collection('requests').distinct("state").then(function(states){
+  var retArr = []
+  var stuff = db.collection('requests').find({"state" : {$ne : null}}).on('data', function(datum){
+    retArr.push(datum)
+  }).on('end', function(){res.json(retArr)})
+  //   var statePromises = states.map(function (state) {
+  //     return retArr.push(state)
 
-    var statePromises = states.map(function (state) {
-      return db.collection('requests').count({"state": state})
-    });
+  //   Promise.all(statePromises).then(function () {
+  //     res.json(retArr);
+  //   });
 
-    Promise.all(statePromises).then(function (results) {
-      res.json(results);
-    });
-
-  });
+  // });
 };
+
