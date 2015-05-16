@@ -16,6 +16,7 @@
     "express": "~4.0.0",
     "express-session": "~1.0.2",
     "express-xml-bodyparser": "0.0.7",
+    "jwt-simple": "^0.3.0",
     "lodash": "~2.4.1",
     "loglevel": "^1.2.0",
     "method-override": "~1.0.0",
@@ -23,12 +24,15 @@
     "morgan": "~1.0.0",
     "node-twitterbot": "^0.2.2",
     "promised-mongo": "^0.11.1",
+    "q": "^1.4.0",
     "request": "^2.55.0",
+    "scmp": "^1.0.0",
     "serve-favicon": "~2.0.1",
     "sox": "^0.1.0",
     "tmp": "0.0.25",
     "topojson": "^1.6.19",
     "twit": "^1.1.20",
+    "underscore": "^1.8.3",
     "watson-developer-cloud": "^0.9.9"
   },
   "devDependencies": {
