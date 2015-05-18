@@ -5,6 +5,7 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
   // Insert routes below
+  app.use('/faq', require('./api/faq'));
   app.use('/api/d3/usa', require('./api/d3/usa'));
   app.use('/api/voice', require('./api/voice'));
   app.use('/api/sms', require('./api/sms'));
@@ -18,6 +19,10 @@ module.exports = function(app) {
 
   app.route('/visualizations').get(function(req, res){
     res.redirect('/#/visualizations')
+  });
+
+  app.route('/faq').get(function(req, res){
+    res.redirect('/#/faq')
   });
 
   // All other routes should redirect to the index.html

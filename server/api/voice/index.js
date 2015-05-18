@@ -23,8 +23,13 @@ var answers = {}
 // Callback soup stitching together API services used to
 // convert between an audio recording -> text -> watson answer.
 var enqueue_question = function (recording) {
+  var city = recording.FromCity
+  var state = recording.FromState
+  var zipcode = recording.FromZip
+  var thisPhone = recording.From
   var audio_location = recording.RecordingUrl;
   var call_ssid = recording.CallSid;
+  
   fs.writeFileSync('./enqueue_question_one_log.txt', JSON.stringify([audio_location, call_ssid]));
 
   speech.text(audio_location, function (question) {
