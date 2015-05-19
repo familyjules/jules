@@ -55,7 +55,6 @@ var enqueue_question = function (callData) {
         feedback: 0
       });
 
-
       twilioClient.calls(callData.CallSid).update({
         url: (answer.value >= config.confidenceLevel ? 'http://jules.mybluemix.net/api/voice/answer' : 'http://jules.mybluemix.net/api/voice/boo')
       });

@@ -13,7 +13,7 @@ angular.module('julesApp')
       },
       {
         'title': 'FAQ',
-        'link': '/FAQ'
+        'link': '/faq'
       },
       {
         'title': 'About Us',
