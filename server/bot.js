@@ -87,7 +87,7 @@ exports.main = function() {
           questionText: tweetInfo.questionText,
           answerId: tweetInfo.answerId,
           answerText: tweetInfo.answerText,
-          confidence: tweetInfo.confidence,
+          confidence: tweetInfo.confidence.toString(),
           feedback: (Number(tweet.text.replace(/\D/g, '')) === 2 ? '-1' : '1')
         };
 
@@ -108,7 +108,7 @@ exports.main = function() {
         log.info(JSON.stringify(options));
 
         request(options, function(err, response) {
-          log.info(JSON.stringify(error));
+          log.info(JSON.stringify(err));
           log.info(JSON.stringify(response));
 
           if(response.statusCode === 200 || response.statusCode == 201) {
