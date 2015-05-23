@@ -1,0 +1,93 @@
+.col-centered{
+  float: none;
+  margin: 0 auto;
+}
+.center{
+  text-align:center;
+}
+.leadSub{
+  text-align:center;
+  /*margin-bottom:25px;*/
+  margin-left: 25px;
+  margin-right: 25px;
+  color:white;
+  font-size:17px;
+}
+.position{
+  font-size:14px;
+  color:rgb(240,240,240);
+}
+.faqHeader {
+  color: white;
+  font-size: 27px;
+  margin: 20px;
+}
+.panel-heading{
+  font-size: 23px;
+  text-align: center
+}
+h3{
+  text-align: center;
+  font-weight: bolder;
+  padding: 10px;
+}
+
+.panel-heading [data-toggle="collapse"]:after {
+   font-family: 'Glyphicons Halflings';
+   content: "e072"; /* "play" icon */
+   float: right;
+   color: #f05f40;
+   font-size: 18px;
+   line-height: 22px;
+   /* rotate "play" icon from > (right arrow) to down arrow */
+   -webkit-transform: rotate(-90deg);
+   -moz-transform: rotate(-90deg);
+   -ms-transform: rotate(-90deg);
+   -o-transform: rotate(-90deg);
+   transform: rotate(-90deg);
+}
+
+.panel-heading [data-toggle="collapse"].collapsed:after {
+   /* rotate "play" icon from > (right arrow) to ^ (up arrow) */
+   -webkit-transform: rotate(90deg);
+   -moz-transform: rotate(90deg);
+   -ms-transform: rotate(90deg);
+   -o-transform: rotate(90deg);
+   transform: rotate(90deg);
+   color: #f05f40;
+}
+.panel-primary > .panel-heading {
+  color: #fff;
+  background-color: #f05f40;
+  border-color: #f05f40;
+}
+.panel-primary{
+  border: none;
+}
+
+.panel.collapse {
+padding-bottom: 25px;
+}
+.panel.collapse.in {
+padding-bottom: 15px;
+}
+.texts{
+  text-align: center;
+  background-color: transparent;
+}
+#faq-content{
+  padding:40px 120px 60px 120px;
+}
+p{
+  padding:20px;
+}
+li{
+  font-size: 17px;
+}
+#logo{
+  margin-top: 50px;
+  height:50px;
+  text-align: center;
+  background-repeat: no-repeat;
+  /*background-image: url('../../assets/images/logo-2.png');"*/
+}

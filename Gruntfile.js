@@ -220,19 +220,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Renames files for browser caching purposes
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= yeoman.dist %>/public/{,*/}*.js',
-            '<%= yeoman.dist %>/public/{,*/}*.css',
-            '<%= yeoman.dist %>/public/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/public/assets/fonts/*'
-          ]
-        }
-      }
-    },
+    // Renames files for browser caching purpo
 
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
@@ -359,6 +347,7 @@ module.exports = function (grunt) {
           expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
+            'manifest.yml',
             'package.json',
             'server/**/*'
           ]
@@ -501,7 +490,7 @@ module.exports = function (grunt) {
       push: {
         command: function() {
           grunt.log.writeln('Pushing ' + pkg.name + ' to bluemix');
-          return 'cd dist ;cf push '+ pkg.name + ' --no-manifest --no-start -c "NODE_ENV=production node server/app.js"' ;
+          return 'cd dist ;cf push '+ pkg.name + ' --no-start -c "NODE_ENV=production node server/app.js"' ;
         }
       },
       start: {
@@ -621,7 +610,6 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
-    'rev',
     'usemin'
   ]);
 

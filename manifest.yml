@@ -1,0 +1,7 @@
+
+---
+applications:
+- name: jules
+  memory: 256M 
+  buildpack: https://github.com/jthomas/nodejs-buildpack.git
+  command: node server/app.js

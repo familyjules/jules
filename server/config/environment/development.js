@@ -3,10 +3,5 @@
 // Development specific configuration
 // ==================================
 module.exports = {
-  // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://localhost/jules-dev'
-  },
-
-  seedDB: true
+  //We don't have any development-specific configurations, yet.
 };
