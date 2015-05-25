@@ -25,13 +25,9 @@ exports.index = function(req, res){
 
   if(question.length === 1 && (question - 0) == question){
 
-    log.info('feedback has been submitted via text');
-
     DB.collection('requests').find({phoneNumber: callData.From}).limit(1).sort({$natural: -1}).on('data', function(textInfo){
       
       if(!textInfo) return;
-
-      log.info('text info isn\'t null');
 
       //Watson expects -1 for poor and 1 for positive
       var watsonFeedback =  {
@@ -56,11 +52,8 @@ exports.index = function(req, res){
       };
 
       request(options, function(err, response) {
-        if(response.statusCode === 200 || response.statusCode === 201) {
-          log.info('feedback was received by watson');
-
+        //if(response.statusCode === 200 || response.statusCode === 201) {
           DB.collection('requests').update({"_id": ObjectID(textInfo._id)}, {$set:{feedback: Number(watsonFeedback.feedback)}}, function(){
-            log.info('db was updated with new feedback integer');
             twilioClient.messages.create({
               to: callData.From,
               from: config.apiKeys.twilio.fromNumber,
@@ -70,7 +63,7 @@ exports.index = function(req, res){
               res.end();
             });
           });
-        }
+        //}
       });
 
     });

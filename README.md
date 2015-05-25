@@ -48,4 +48,4 @@ grunt test
 
 - See [_CONTRIBUTING.md](_CONTRIBUTING.md) for contribution guidelines.
 
-- See [STYLEGUIDE.md](STYLEGUIDE.md) for the project's style manual.
+- See [_STYLE-GUIDE.md](_STYLE-GUIDE.md) for the project's style manual.
