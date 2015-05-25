@@ -26,7 +26,7 @@
   border:1px solid grey;
   border-radius:5px;
   font-size:12px;
-  width:auto;
+  width:300;
   padding:4px;
   color:white;
   opacity:0;
@@ -35,14 +35,15 @@
   table-layout:fixed;
 }
 #tooltip tr td{
-  padding:0;
-  margin:0;
+  padding:10px;
+  margin:10px;
 }
 #tooltip tr td:nth-child(1){
-  width:50px;
+  text-align: left;
+  width:100px;
 }
 #tooltip tr td:nth-child(2){
-  text-align:center;
+  text-align:left;
 }
 svg{
   display:block;

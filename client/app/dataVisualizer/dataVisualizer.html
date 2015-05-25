@@ -1,37 +1,19 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 	<h1 class='leadHead'>Top Questions of the last 24 hours</h1>
-	<h1 class='leadHead'>{{data}}</h1>
 
 	<div class="container">
 		<div class="col-md-12">
 			<div id="tooltip"></div>
-			<svg width="480" height="300" id="statesvg" preserveAspectRatio="xMinYMin" viewBox="0 0 1000 1"></svg> <!-- svg to hold the map. -->
-
-			<script type="text/javascript">
-				function tooltipHtml(n, d){	/* function to create html content string in tooltip div. */
-					return "<h4>"+n+"</h4><table>"+
-						"<tr><td>Low</td><td>"+(d.low)+"</td></tr>"+
-						"<tr><td>Average</td><td>"+(d.avg)+"</td></tr>"+
-						"<tr><td>High</td><td>"+(d.high)+"</td></tr>"+
-						"</table>";
-				}
-				var sampleData ={};
-				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
-				"ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", 
-				"MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", 
-				"CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", 
-				"WI", "MO", "AR", "OK", "KS", "LS", "VA"]
-					.forEach(function(d){ 
-						var low=Math.round(100*Math.random()), 
-							mid=Math.round(100*Math.random()), 
-							high=Math.round(100*Math.random());
-							sampleData[d]={low:d3.min([low,mid,high]), high:d3.max([low,mid,high]), 
-								avg:Math.round((low+mid+high)/3), color:d3.interpolate("#ffffcc", "#800026")(low/100)}; 
-					});
-				
-				uStates.draw("#statesvg", sampleData, tooltipHtml);
-			</script>
+			<svg width="840" height="600" id="statesvg" preserveAspectRatio="xMinYMin" viewBox="0 0 1000 1"></svg> <!-- svg to hold the map. -->
 		</div>
 
 	</div>
+<!-- 	<div class="container">
+		<table>
+			<tr ng-repeat="x in data">
+				<td>{{x.name}}</td>
+				<td>{{x.number}}</td>
+			</tr>
+		</table>
+	</div> -->
