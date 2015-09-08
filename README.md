@@ -38,11 +38,11 @@ grunt test
 ```
 
 ## Team
-
+  - __Product Owner__: Jason Collins ([@SaintEmbers](https://github.com/SaintEmbers))
   - __Scrum Master__: Tyler Lambe ([@tylambe](https://github.com/tylambe))
   - __Development__: Sam Thomas ([@samuelfullerthomas](https://github.com/samuelfullerthomas))
   - __Development__: Brian Small ([@bsmall512](https://github.com/bsmall512))
-  - __Development__: Jason Collins ([@SaintEmbers](https://github.com/SaintEmbers))
+  
 
 ## Contributing
 
